@@ -24,52 +24,61 @@
 
                         <h4 class="fw-bold text-info mb-4">Custom Properties</h4>
 
-                        @for (int i = 0; i < Model.Properties.Count; i++)
+                        @if(Model.Properties.Count==0 || Model.Properties.Count == null)
                         {
-                            <div class="mb-4">
-                                <input type="hidden" asp-for="@Model.Properties[i].PropertyDefinitionId" />
-                                <input type="hidden" asp-for="@Model.Properties[i].PropertyName" />
-                                <input type="hidden" asp-for="@Model.Properties[i].PropertyType" />
-                                <input type="hidden" asp-for="@Model.Properties[i].IsRequired"
-                                       id="prop_@(i)_IsRequired" />
-
-                                <label class="form-label fw-semibold text-primary">
-                                    @Model.Properties[i].PropertyName
-                                    @if (Model.Properties[i].IsRequired)
-                                    {
-                                        <span class="text-danger">*</span>
-                                    }
-                                </label>
-
-                                @if (Model.Properties[i].PropertyType == PropertyType.Dropdown)
-                                {
-                                    <select asp-for="@Model.Properties[i].Value"
-                                            class="form-select form-select-lg border-info shadow-sm"
-                                            id="prop_@(i)_Value">
-                                        <option value="">-- Select --</option>
-                                        @foreach (var option in Model.Properties[i].Options)
-                                        {
-                                            <option value="@option">@option</option>
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    var inputType = Model.Properties[i].PropertyType switch
-                                    {
-                                        PropertyType.Date => "date",
-                                        PropertyType.Integer => "number",
-                                        _ => "text"
-                                    };
-
-                                    <input type="@inputType"
-                                           asp-for="@Model.Properties[i].Value"
-                                           class="form-control form-control-lg border-info shadow-sm"
-                                           id="prop_@(i)_Value" />
-                                }
-
-                                <span class="text-danger small" id="prop_@(i)_Error"></span>
+                            <div class="alert alert-info text-center fw-bold fs-4 my-5 shadow-sm" style="background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%); color: #fff;">
+                                <i class="bi bi-emoji-smile me-2"></i> No Custom Properties Added
                             </div>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.Properties.Count; i++)
+                            {
+                                <div class="mb-4">
+                                    <input type="hidden" asp-for="@Model.Properties[i].PropertyDefinitionId" />
+                                    <input type="hidden" asp-for="@Model.Properties[i].PropertyName" />
+                                    <input type="hidden" asp-for="@Model.Properties[i].PropertyType" />
+                                    <input type="hidden" asp-for="@Model.Properties[i].IsRequired"
+                                           id="prop_@(i)_IsRequired" />
+
+                                    <label class="form-label fw-semibold text-primary">
+                                        @Model.Properties[i].PropertyName
+                                        @if (Model.Properties[i].IsRequired)
+                                        {
+                                            <span class="text-danger">*</span>
+                                        }
+                                    </label>
+
+                                    @if (Model.Properties[i].PropertyType == PropertyType.Dropdown)
+                                    {
+                                        <select asp-for="@Model.Properties[i].Value"
+                                                class="form-select form-select-lg border-info shadow-sm"
+                                                id="prop_@(i)_Value">
+                                            <option value="">-- Select --</option>
+                                            @foreach (var option in Model.Properties[i].Options)
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        var inputType = Model.Properties[i].PropertyType switch
+                                        {
+                                            PropertyType.Date => "date",
+                                            PropertyType.Integer => "number",
+                                            _ => "text"
+                                        };
+
+                                        <input type="@inputType"
+                                               asp-for="@Model.Properties[i].Value"
+                                               class="form-control form-control-lg border-info shadow-sm"
+                                               id="prop_@(i)_Value" />
+                                    }
+
+                                    <span class="text-danger small" id="prop_@(i)_Error"></span>
+                                </div>
+                            }
                         }
 
                         <div class="d-grid">
