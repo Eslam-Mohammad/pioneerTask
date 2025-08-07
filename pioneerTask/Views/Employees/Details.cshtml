@@ -1,0 +1,88 @@
+﻿@model EmployeeViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0">Employee Details</h2>
+                </div>
+                <div class="card-body bg-light">
+                    <h4 class="fw-semibold text-info mb-3">Employee</h4>
+                    <hr class="border-info opacity-50" />
+                    <dl class="row mb-4">
+                        <dt class="col-sm-3 text-primary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Code)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-primary bg-gradient fs-6 px-3 py-2 shadow-sm">
+                                @Html.DisplayFor(model => model.Code)
+                            </span>
+                        </dd>
+                        <dt class="col-sm-3 text-primary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-info bg-gradient text-dark fs-6 px-3 py-2 shadow-sm">
+                                @Html.DisplayFor(model => model.Name)
+                            </span>
+                        </dd>
+                    </dl>
+
+                    <h5 class="fw-bold text-info mb-3">Custom Properties</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle rounded-3 overflow-hidden shadow-sm">
+                            <thead class="bg-gradient" style="background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;">
+                                <tr class="text-white">
+                                    <th>Property Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var property in Model.Properties)
+                                {
+                                    <tr class="bg-white">
+                                        <td>
+                                            <span class="badge bg-primary bg-gradient fs-6 px-3 py-2 shadow-sm">@property.PropertyName</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info bg-gradient text-dark fs-6 px-3 py-2 shadow-sm">@property.Value</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 d-flex justify-content-end gap-3 rounded-bottom-4">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-gradient btn-primary btn-lg fw-bold shadow">Edit</a>
+                    <a asp-action="Index" class="btn btn-gradient btn-secondary btn-lg fw-bold shadow">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient.btn-secondary {
+                background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}

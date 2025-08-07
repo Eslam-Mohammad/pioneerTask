@@ -1,0 +1,114 @@
+﻿@model IEnumerable<PropertyDefinitionViewModel>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0">Property Definitions</h2>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle rounded-3 overflow-hidden shadow-sm">
+                            <thead class="bg-gradient" style="background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;">
+                                <tr class="text-white">
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Options</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="bg-white">
+                                        <td>
+                                            <span class="badge bg-primary bg-gradient fs-6 px-3 py-2 shadow-sm">@item.Name</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info bg-gradient text-dark fs-6 px-3 py-2 shadow-sm">@item.Type</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(item.IsRequired ? "bg-success" : "bg-secondary") bg-gradient fs-6 px-3 py-2 shadow-sm">
+                                                @(item.IsRequired ? "Yes" : "No")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (item.Type == PropertyType.Dropdown)
+                                            {
+                                                @if (item.Options != null && item.Options.Any())
+                                                {
+                                                    <span class="badge bg-info bg-gradient text-dark fs-6 px-3 py-2 shadow-sm">
+                                                        @string.Join(", ", item.Options)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No options</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">N/A</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-gradient btn-primary btn-sm fw-bold shadow">Edit</a>
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-gradient btn-info btn-sm fw-bold shadow">Details</a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-gradient btn-danger btn-sm fw-bold shadow">Delete</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <a asp-action="Create" class="btn btn-gradient btn-success btn-lg fw-bold shadow">Create New</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient.btn-secondary {
+                background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient.btn-info {
+                background: linear-gradient(90deg, #3b82f6 0%, #6ee7b7 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient.btn-danger {
+                background: linear-gradient(90deg, #ef4444 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient.btn-success {
+                background: linear-gradient(90deg, #22c55e 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}

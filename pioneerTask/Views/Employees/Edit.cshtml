@@ -1,0 +1,110 @@
+﻿@model EmployeeViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0">Edit Employee</h2>
+                </div>
+                <div class="card-body bg-light">
+                    <form asp-action="Edit" autocomplete="off">
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Basic Employee Fields -->
+                        <div class="mb-4">
+                            <label asp-for="Code" class="form-label fw-semibold text-primary"></label>
+                            <input asp-for="Code" class="form-control form-control-lg border-primary shadow-sm" />
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold text-primary"></label>
+                            <input asp-for="Name" class="form-control form-control-lg border-primary shadow-sm" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <h4 class="fw-bold text-info mb-4">Custom Properties</h4>
+
+                        @for (int i = 0; i < Model.Properties.Count; i++)
+                        {
+                            <div class="mb-4">
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyDefinitionId" />
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyName" />
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyType" />
+                                <input type="hidden" asp-for="@Model.Properties[i].IsRequired" />
+
+                                <label class="form-label fw-semibold text-primary">
+                                    @Model.Properties[i].PropertyName
+                                    @if (Model.Properties[i].IsRequired)
+                                    {
+                                        <span class="text-danger">*</span>
+                                    }
+                                </label>
+
+                                @if (Model.Properties[i].PropertyType == PropertyType.Dropdown)
+                                {
+                                    <select asp-for="@Model.Properties[i].Value"
+                                            class="form-select form-select-lg border-info shadow-sm">
+                                        <option value="">-- Select --</option>
+                                        @foreach (var option in Model.Properties[i].Options)
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    var inputType = Model.Properties[i].PropertyType switch
+                                    {
+                                        PropertyType.Date => "date",
+                                        PropertyType.Integer => "number",
+                                        _ => "text"
+                                    };
+
+                                    <input type="@inputType"
+                                           asp-for="@Model.Properties[i].Value"
+                                           class="form-control form-control-lg border-info shadow-sm" />
+                                }
+
+                                @if (Model.Properties[i].IsRequired)
+                                {
+                                    <span asp-validation-for="@Model.Properties[i].Value" class="text-danger small"></span>
+                                }
+                            </div>
+                        }
+
+                        <div class="d-flex gap-3">
+                            <input type="submit" value="Save" class="btn btn-gradient btn-primary btn-lg fw-bold shadow" />
+                            <a asp-action="Index" class="btn btn-gradient btn-secondary btn-lg fw-bold shadow">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient.btn-secondary {
+                background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}

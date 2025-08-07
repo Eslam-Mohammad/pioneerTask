@@ -1,0 +1,128 @@
+﻿@model PropertyDefinitionViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0">Edit Property Definition</h2>
+                </div>
+                <div class="card-body bg-light">
+                    <form asp-action="Edit" autocomplete="off">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold text-primary"></label>
+                            <input asp-for="Name" class="form-control form-control-lg border-primary shadow-sm" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Type" class="form-label fw-semibold text-primary"></label>
+                            <select asp-for="Type" asp-items="Html.GetEnumSelectList<PropertyType>()" class="form-select form-select-lg border-primary shadow-sm"></select>
+                            <span asp-validation-for="Type" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input asp-for="IsRequired" class="form-check-input bg-primary border-primary" type="checkbox" role="switch" id="IsRequiredSwitch" />
+                            <label asp-for="IsRequired" class="form-check-label fw-semibold text-primary" for="IsRequiredSwitch"></label>
+                        </div>
+
+                        <div class="mb-4" id="optionsGroup" style="@(Model.Type == PropertyType.Dropdown ? "" : "display:none")">
+                            <label class="form-label fw-semibold text-primary">Dropdown Options</label>
+                            <div id="optionsContainer">
+                                @if (Model.Options != null)
+                                {
+                                    @for (var i = 0; i < Model.Options.Count; i++)
+                                    {
+                                        <div class="input-group mb-2 option-input">
+                                            <input name="Options[@i]" value="@Model.Options[i]" class="form-control border-info shadow-sm" />
+                                            <button type="button" class="btn btn-outline-danger remove-option ms-2">Remove</button>
+                                        </div>
+                                    }
+                                }
+                                <div class="input-group mb-2 option-input">
+                                    <input name="Options[@(Model.Options?.Count ?? 0)]" class="form-control border-info shadow-sm" />
+                                    <button type="button" class="btn btn-outline-danger remove-option ms-2">Remove</button>
+                                </div>
+                            </div>
+                            <button type="button" id="addOption" class="btn btn-gradient btn-info mt-2 px-4 fw-bold shadow-sm">Add Option</button>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <input type="submit" value="Save" class="btn btn-gradient btn-primary btn-lg fw-bold shadow" />
+                            <a asp-action="Index" class="btn btn-gradient btn-secondary btn-lg fw-bold shadow">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function() {
+            $('#Type').change(function() {
+                if ($(this).val() === '3') { // Dropdown
+                    $('#optionsGroup').show();
+                } else {
+                    $('#optionsGroup').hide();
+                }
+            });
+
+            $('#addOption').click(function() {
+                const container = $('#optionsContainer');
+                const index = container.children().length;
+                container.append(`
+                    <div class="input-group mb-2 option-input">
+                        <input name="Options[${index}]" class="form-control border-info shadow-sm" />
+                        <button type="button" class="btn btn-outline-danger remove-option ms-2">Remove</button>
+                    </div>
+                `);
+            });
+
+            $(document).on('click', '.remove-option', function() {
+                if ($('#optionsContainer .option-input').length > 1) {
+                    $(this).closest('.option-input').remove();
+                    reindexOptions();
+                }
+            });
+
+            function reindexOptions() {
+                $('#optionsContainer .option-input').each(function(index) {
+                    $(this).find('input').attr('name', `Options[${index}]`);
+                });
+            }
+        });
+    </script>
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient.btn-secondary {
+                background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient.btn-info {
+                background: linear-gradient(90deg, #3b82f6 0%, #6ee7b7 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}

@@ -1,0 +1,136 @@
+﻿@model EmployeeViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-0">Create Employee</h2>
+                </div>
+                <div class="card-body bg-light">
+                    <form asp-action="Create" id="employeeForm" autocomplete="off">
+                        <!-- Basic Employee Fields -->
+                        <div class="mb-4">
+                            <label asp-for="Code" class="form-label fw-semibold text-primary"></label>
+                            <input asp-for="Code" class="form-control form-control-lg border-primary shadow-sm" id="Code" required />
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold text-primary"></label>
+                            <input asp-for="Name" class="form-control form-control-lg border-primary shadow-sm" id="Name" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <h4 class="fw-bold text-info mb-4">Custom Properties</h4>
+
+                        @for (int i = 0; i < Model.Properties.Count; i++)
+                        {
+                            <div class="mb-4">
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyDefinitionId" />
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyName" />
+                                <input type="hidden" asp-for="@Model.Properties[i].PropertyType" />
+                                <input type="hidden" asp-for="@Model.Properties[i].IsRequired"
+                                       id="prop_@(i)_IsRequired" />
+
+                                <label class="form-label fw-semibold text-primary">
+                                    @Model.Properties[i].PropertyName
+                                    @if (Model.Properties[i].IsRequired)
+                                    {
+                                        <span class="text-danger">*</span>
+                                    }
+                                </label>
+
+                                @if (Model.Properties[i].PropertyType == PropertyType.Dropdown)
+                                {
+                                    <select asp-for="@Model.Properties[i].Value"
+                                            class="form-select form-select-lg border-info shadow-sm"
+                                            id="prop_@(i)_Value">
+                                        <option value="">-- Select --</option>
+                                        @foreach (var option in Model.Properties[i].Options)
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    var inputType = Model.Properties[i].PropertyType switch
+                                    {
+                                        PropertyType.Date => "date",
+                                        PropertyType.Integer => "number",
+                                        _ => "text"
+                                    };
+
+                                    <input type="@inputType"
+                                           asp-for="@Model.Properties[i].Value"
+                                           class="form-control form-control-lg border-info shadow-sm"
+                                           id="prop_@(i)_Value" />
+                                }
+
+                                <span class="text-danger small" id="prop_@(i)_Error"></span>
+                            </div>
+                        }
+
+                        <div class="d-grid">
+                            <input type="submit" value="Create" class="btn btn-gradient btn-primary btn-lg fw-bold shadow" id="submitButton" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('employeeForm').addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Validate basic fields
+            if (!document.getElementById('Code').value) {
+                isValid = false;
+                document.querySelector('[data-valmsg-for="Code"]').textContent = 'Code is required';
+            }
+
+            if (!document.getElementById('Name').value) {
+                isValid = false;
+                document.querySelector('[data-valmsg-for="Name"]').textContent = 'Name is required';
+            }
+
+            // Validate custom properties
+            @for (int i = 0; i < Model.Properties.Count; i++)
+            {
+                        <text>
+                        if (document.getElementById('prop_@(i)_IsRequired').value === 'True' &&
+                            !document.getElementById('prop_@(i)_Value').value) {
+                            isValid = false;
+                            document.getElementById('prop_@(i)_Error').textContent = 'This field is required';
+                        } else {
+                            document.getElementById('prop_@(i)_Error').textContent = '';
+                        }
+                        </text>
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}

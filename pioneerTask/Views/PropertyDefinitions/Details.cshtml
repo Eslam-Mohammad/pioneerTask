@@ -1,0 +1,95 @@
+﻿@model PropertyDefinitionViewModel
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h4 class="mb-0">Property Definition Details</h4>
+                </div>
+                <div class="card-body bg-light">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3 text-primary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-primary bg-gradient fs-6 px-3 py-2 shadow-sm">
+                                @Html.DisplayFor(model => model.Name)
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3 text-primary fw-semibold">
+                            @Html.DisplayNameFor(model => model.Type)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-info bg-gradient text-dark fs-6 px-3 py-2 shadow-sm">
+                                @Html.DisplayFor(model => model.Type)
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3 text-primary fw-semibold">
+                            @Html.DisplayNameFor(model => model.IsRequired)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-success bg-gradient fs-6 px-3 py-2 shadow-sm">
+                                @(Model.IsRequired ? "Yes" : "No")
+                            </span>
+                        </dd>
+
+                        @if (Model.Type == PropertyType.Dropdown)
+                        {
+                            <dt class="col-sm-3 text-primary fw-semibold">
+                                Dropdown Options
+                            </dt>
+                            <dd class="col-sm-9">
+                                @if (Model.Options != null && Model.Options.Any())
+                                {
+                                    <ul class="list-group list-group-flush rounded-3 shadow-sm">
+                                        @foreach (var option in Model.Options)
+                                        {
+                                            <li class="list-group-item bg-gradient bg-info bg-opacity-25 text-dark fw-semibold mb-1 rounded-2">
+                                                @option
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No options defined</span>
+                                }
+                            </dd>
+                        }
+                    </dl>
+                </div>
+                <div class="card-footer bg-white border-0 d-flex justify-content-end gap-3 rounded-bottom-4">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-gradient btn-primary btn-lg fw-bold shadow">Edit</a>
+                    <a asp-action="Index" class="btn btn-gradient btn-secondary btn-lg fw-bold shadow">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%);
+            color: #fff !important;
+            border: none;
+        }
+
+            .btn-gradient.btn-secondary {
+                background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+                color: #fff !important;
+            }
+
+            .btn-gradient:hover, .btn-gradient:focus {
+                filter: brightness(0.95);
+                color: #fff !important;
+            }
+
+        .card-header.bg-gradient {
+            background: linear-gradient(90deg, #4f8cff 0%, #6ee7b7 100%) !important;
+        }
+    </style>
+}
